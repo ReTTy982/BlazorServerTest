@@ -1,11 +1,12 @@
 using RandomNameGeneratorLibrary;
 using Newtonsoft.Json;
 using Models;
+namespace DataHandler;
 
 public class DataGenerator
 {
     private readonly PersonNameGenerator NameGenerator = new();
-    private int idRange = 0;
+    public int idRange = 0;
     private readonly Random random = new();
     private readonly int subjectsLength = Enum.GetValues(typeof(Subjects)).Length;
     private enum Gender
@@ -104,9 +105,7 @@ public class DataGenerator
         int age = this.random.Next(30, 100);
         Subjects[] allSubjects = (Subjects[])Enum.GetValues(typeof(Subjects));
         int randomIndex = random.Next(0, allSubjects.Length);
-        Console.WriteLine(randomIndex);
         Subjects randomSubject = allSubjects[randomIndex];
-        Console.WriteLine(randomSubject);
         teacher.SetSubject(randomSubject);
         teacher.SetAge(age);
         return teacher;

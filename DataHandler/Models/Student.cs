@@ -13,6 +13,14 @@ public class Student : Person
 
 	}
 
+	public Student(int id,string name, string surname, int age,int semester, string[] classes) : base(name,surname,age)
+	{
+		this.Id = id;
+		this.Semester = semester;
+		this.Classes = classes;
+
+	}
+
 	public void TakeClasses(Subjects[] classes)
 	{
 		string[] stringClasses = new string[classes.Length];

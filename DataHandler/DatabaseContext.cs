@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
+namespace DataHandler;
 
 public class DatabaseContext : DbContext
 {

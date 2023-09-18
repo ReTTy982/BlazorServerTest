@@ -2,6 +2,7 @@ using BlazorServerTest.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using DataHandler;
 
 
 var builder = WebApplication.CreateBuilder(args);

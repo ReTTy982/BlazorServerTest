@@ -1,6 +1,82 @@
 ﻿@page "/db"
-@inject DatabaseContext dbContext
 @using Models;
+@using DataHandler;
+@inject DatabaseContext dbContext
+
+
+<form @onsubmit="CreatePerson">
+    <h3>Create Person</h3>
+    <div style="width: 25%;">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" @bind="Name">
+    </div>
+    <div class="form-group">
+        <label for="surname">Surname:</label>
+        <input type="text" class="form-control" id="surname" @bind="Surname">
+    </div>
+    <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" class="form-control" id="age" @bind="Age">
+    </div>
+    <div class="form-group">
+        <label for="role">Role:</label>
+        <select class="form-control" id="role" @bind="SelectedRole">
+            <option value="Teacher">Teacher</option>
+            <option value="Student">Student</option>
+        </select>
+    </div>
+    @if (SelectedRole == "Student")
+    {
+            <div class="form-group">
+                <label for="semester">Semester:</label>
+                <select class="form-control" id="semester" @bind="Semester">
+                    @for (int i = 1; i <= 7; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="classes">Classes:</label>
+                <select class="form-control" id="classes" @bind="SelectedClass">
+                    @foreach (Subjects subject in Enum.GetValues(typeof(Subjects)))
+                    {
+                        <option value="@subject">@subject.ToString()</option>
+                    }
+                </select>
+                <button @onclick="AddSelectedClass" class="btn btn-primary">Add</button>
+            </div>
+
+            <div>
+                <h4>Selected Classes:</h4>
+                <ul>
+                    @foreach (Subjects subject in ClassesList)
+                    {
+                        <li>
+                            @subject.ToString()
+                            <button @onclick="() => RemoveSelectedClass(subject)" class="btn btn-danger">Remove</button>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+
+    }
+    else if (SelectedRole == "Teacher")
+    {
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" class="form-control" id="subject" @bind="Subject">
+        </div>
+    }
+
+
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>
 
 <div style="display: flex; justify-content: space-between;">
     <h3>Students</h3>
@@ -88,9 +164,6 @@
 <textarea rows="10" cols="40" readonly>@JsonData</textarea>
 
 
-
-
-
 <form @onsubmit="CreateEmployee">
     <div class="form-group">
         <label for="name">Name:</label>
@@ -132,9 +205,14 @@
     private string? Email;
     private List<Employee>? employees;
     DataGenerator generator = new();
-    Student[]? students;
-    Teacher[]? teachers;
+    List<Student>? students;
+    List<Teacher>? teachers;
     private string? JsonData;
+    private string? SelectedRole;
+    private string? Subject;
+    private int Semester;
+    private Subjects SelectedClass;
+    private List<Subjects> ClassesList { get; set; } = new List<Subjects>();
 
     private void CreateEmployee()
     {
@@ -165,19 +243,47 @@
         JsonData =  JsonHandler.ClassToJson<Teacher>(person);
     }
 
+    private void CreatePerson()
+    {
+        if (SelectedRole == "Student")
+        {
+            string[] array = ClassesList.ConvertAll(subject => subject.ToString()).ToArray();
+            Student student = new(generator.idRange, Name, Surname, Age, Semester,array);
+            students.Add(student);
+            generator.idRange++;
+        }
+
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        SelectedRole = "Student";
         if (students == null)
         {
-            students = await generator.AssignStudentsRoles(2);
+            var array = await generator.AssignStudentsRoles(2);
+            students = array.ToList();
 
         }
         if (teachers == null)
         {
-            teachers = await generator.AssignTeachersRoles(2);
+            var array = await generator.AssignTeachersRoles(2);
+            teachers = array.ToList();
 
         }
 
+    }
+
+    private void AddSelectedClass()
+    {
+        if (!ClassesList.Contains(SelectedClass))
+        {
+            ClassesList.Add(SelectedClass);
+        }
+    }
+
+    private void RemoveSelectedClass(Subjects subject)
+    {
+        ClassesList.Remove(subject);
     }
 
 
