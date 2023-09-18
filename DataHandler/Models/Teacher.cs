@@ -11,6 +11,13 @@ public class Teacher : Person
 
     }
 
+
+    public Teacher(int id, string name, string surname, int age, string subject) :base(name,surname,age)
+    {
+        this.Id = id;
+        this.Subject = subject;
+    }
+
     public void SetSubject(Subjects subject)
     {
 

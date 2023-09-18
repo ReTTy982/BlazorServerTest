@@ -5,33 +5,33 @@
 @inject DatabaseContext dbContext
 
 
-<form @onsubmit="CreatePerson">
+<form @onsubmit="personController.CreatePerson">
     <h3>Create Person</h3>
     <div style="width: 25%;">
     <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" class="form-control" id="name" @bind="Name">
+            <input type="text" class="form-control" id="name" @bind="personController.Name">
     </div>
     <div class="form-group">
         <label for="surname">Surname:</label>
-        <input type="text" class="form-control" id="surname" @bind="Surname">
+        <input type="text" class="form-control" id="surname" @bind="personController.Surname">
     </div>
     <div class="form-group">
         <label for="age">Age:</label>
-        <input type="number" class="form-control" id="age" @bind="Age">
+        <input type="number" class="form-control" id="age" @bind="personController.Age">
     </div>
     <div class="form-group">
         <label for="role">Role:</label>
-        <select class="form-control" id="role" @bind="SelectedRole">
+        <select class="form-control" id="role" @bind="personController.SelectedRole">
             <option value="Teacher">Teacher</option>
             <option value="Student">Student</option>
         </select>
     </div>
-    @if (SelectedRole == "Student")
+    @if (personController.SelectedRole == "Student")
     {
             <div class="form-group">
                 <label for="semester">Semester:</label>
-                <select class="form-control" id="semester" @bind="Semester">
+                <select class="form-control" id="semester" @bind="personController.Semester">
                     @for (int i = 1; i <= 7; i++)
                     {
                         <option value="@i">@i</option>
@@ -41,23 +41,23 @@
 
             <div class="form-group">
                 <label for="classes">Classes:</label>
-                <select class="form-control" id="classes" @bind="SelectedClass">
+                <select class="form-control" id="classes" @bind="personController.SelectedClass">
                     @foreach (Subjects subject in Enum.GetValues(typeof(Subjects)))
                     {
                         <option value="@subject">@subject.ToString()</option>
                     }
                 </select>
-                <button @onclick="AddSelectedClass" class="btn btn-primary">Add</button>
+                <button @onclick="personController.AddSelectedClass" class="btn btn-primary">Add</button>
             </div>
 
             <div>
                 <h4>Selected Classes:</h4>
                 <ul>
-                    @foreach (Subjects subject in ClassesList)
+                    @foreach (Subjects subject in personController.ClassesList)
                     {
                         <li>
                             @subject.ToString()
-                            <button @onclick="() => RemoveSelectedClass(subject)" class="btn btn-danger">Remove</button>
+                            <button @onclick="() => personController.RemoveSelectedClass(subject)" class="btn btn-danger">Remove</button>
                         </li>
                     }
                 </ul>
@@ -65,11 +65,16 @@
 
 
     }
-    else if (SelectedRole == "Teacher")
+    else if (personController.SelectedRole == "Teacher")
     {
         <div class="form-group">
             <label for="subject">Subject:</label>
-            <input type="text" class="form-control" id="subject" @bind="Subject">
+            <select class="form-control" id="subject" @bind="personController.SelectedSubject">
+                @foreach (Subjects subject in Enum.GetValues(typeof(Subjects)))
+                {
+                    <option value="@subject">@subject.ToString()</option>
+                }
+            </select>
         </div>
     }
 
@@ -88,7 +93,7 @@
 
 <div style ="display: flex;">
     <div style="flex: 1; margin-right: 20px;">
-        @if (students == null)
+        @if (personController.students == null)
         {
             <p><em>Cos....</em></p>
         }
@@ -108,7 +113,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var student in students)
+                    @foreach (var student in personController.students)
                     {
                         <tr>
                             <td>@student.Name</td>
@@ -117,7 +122,7 @@
                             <td>@student.Semester</td>
                             <td>@string.Join(", ", student.Classes)</td>
                             <td>
-                                <button @onclick="() => JsonDataStudents(student.Id)" class="btn btn-primary">Get</button>
+                                <button @onclick="() => personController.JsonDataStudents(student.Id)" class="btn btn-primary">Get</button>
                             </td>
                         </tr>
                     }
@@ -126,7 +131,7 @@
         }
     </div>
     <div style="flex: 1;">
-        @if (teachers == null)
+        @if (personController.teachers == null)
         {
             <p><em>Cos....</em></p>
         }
@@ -136,7 +141,7 @@
             <table class="table table-bordered">
                 <thead class="alert-dark">
                     <tr>
-                        <th>Name</th>
+                        <th>personControllerName</th>
                         <th>Surname</th>
                         <th>Age</th>
                         <th>Subject</th>
@@ -144,7 +149,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var teacher in teachers)
+                    @foreach (var teacher in personController.teachers)
                     {
                         <tr>
                             <td>@teacher.Name</td>
@@ -152,7 +157,7 @@
                             <td>@teacher.Age</td>
                             <td>@teacher.Subject</td>
                             <td>
-                                <button @onclick="() => JsonDataTeachers(teacher.Id)" class="btn btn-primary">Get</button>
+                                <button @onclick="() => personController.JsonDataTeachers(teacher.Id)" class="btn btn-primary">Get</button>
                             </td>
                         </tr>
                     }
@@ -162,133 +167,19 @@
     </div>
 </div>
 
-<textarea rows="10" cols="40" readonly>@JsonData</textarea>
+<textarea rows="10" cols="40" readonly>@personController.JsonData</textarea>
 
-
-<form @onsubmit="CreateEmployee">
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" class="form-control" id="name" @bind="Name">
-    </div>
-    <div class="form-group">
-        <label for="surname">Surname:</label>
-        <input type="text" class="form-control" id="surname" @bind="Surname">
-    </div>
-    <div class="form-group">
-        <label for="age">Age:</label>
-        <input type="number" class="form-control" id="age" @bind="Age">
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="text" class="form-control" id="email" @bind="Email">
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
-
-<button @onclick="ShowAllEmployees" class="btn btn-secondary">Show All Employees</button>
-
-@if (employees != null && employees.Count > 0)
-{
-    <h4>All Employees:</h4>
-    <ul>
-        @foreach (var employee in employees)
-        {
-            <li>@employee.Id @employee.Name @employee.Surname (Age: @employee.Age, Email: @employee.Email)</li>
-        }
-    </ul>
-}
 
 @code {
     private PersonController personController = new();
 
-    private int Id=0;
-    private string? Name;
-    private string? Surname;
-    private int Age;
-    private string? Email;
-    private List<Employee>? employees;
-    DataGenerator generator = new();
-    List<Student>? students;
-    List<Teacher>? teachers;
-    private string? JsonData;
-    private string? SelectedRole;
-    private string? Subject;
-    private int Semester;
-    private Subjects SelectedClass;
-    private List<Subjects> ClassesList { get; set; } = new List<Subjects>();
 
-    private void CreateEmployee()
-    {
-        Console.WriteLine(Id);
-        Employee employee = new Employee(Id,Name,Surname,Age,Email);
 
-        Console.WriteLine(Id);
-        dbContext.Employees.Add(employee);
-        Console.WriteLine(Dumper.Dump(employee));
-        dbContext.SaveChanges();
-
-    }
-    private void ShowAllEmployees()
-    {
-        employees = dbContext.Employees.ToList();
-
-    }
-
-    private void JsonDataStudents(int targetId)
-    {
-        var person = students.First(student => student.Id == targetId);
-        JsonData = JsonHandler.ClassToJson<Student>(person);
-    }
-
-    private void JsonDataTeachers(int targetId)
-    {
-        var person = teachers.First(teacher => teacher.Id == targetId);
-        JsonData =  JsonHandler.ClassToJson<Teacher>(person);
-    }
-
-    private void CreatePerson()
-    {
-        if (SelectedRole == "Student")
-        {
-            string[] array = ClassesList.ConvertAll(subject => subject.ToString()).ToArray();
-            Student student = new(generator.idRange, Name, Surname, Age, Semester,array);
-            students.Add(student);
-            generator.idRange++;
-        }
-
-    }
 
     protected override async Task OnInitializedAsync()
     {
-        SelectedRole = "Student";
-        if (students == null)
-        {
-            var array = await generator.AssignStudentsRoles(2);
-            students = array.ToList();
-
-        }
-        if (teachers == null)
-        {
-            var array = await generator.AssignTeachersRoles(2);
-            teachers = array.ToList();
-
-        }
-
+        await personController.Init();
     }
-
-    private void AddSelectedClass()
-    {
-        if (!ClassesList.Contains(SelectedClass))
-        {
-            ClassesList.Add(SelectedClass);
-        }
-    }
-
-    private void RemoveSelectedClass(Subjects subject)
-    {
-        ClassesList.Remove(subject);
-    }
-
 
 
 }
