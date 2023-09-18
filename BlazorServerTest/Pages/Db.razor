@@ -1,6 +1,7 @@
 ﻿@page "/db"
 @using Models;
 @using DataHandler;
+@using Controller;
 @inject DatabaseContext dbContext
 
 
@@ -198,6 +199,8 @@
 }
 
 @code {
+    private PersonController personController = new();
+
     private int Id=0;
     private string? Name;
     private string? Surname;
