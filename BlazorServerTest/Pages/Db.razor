@@ -1,0 +1,185 @@
+﻿@page "/db"
+@inject DatabaseContext dbContext
+@using Models;
+
+<div style="display: flex; justify-content: space-between;">
+    <h3>Students</h3>
+    <h3>Teachers</h3>
+</div>
+
+
+
+<div style ="display: flex;">
+    <div style="flex: 1; margin-right: 20px;">
+        @if (students == null)
+        {
+            <p><em>Cos....</em></p>
+        }
+        else
+        {
+
+            <table class="table table-bordered">
+                <thead class="alert-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Age</th>
+                        <th>Semester</th>
+                        <th>Classes</th>
+                        <th>Get Json</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in students)
+                    {
+                        <tr>
+                            <td>@student.Name</td>
+                            <td>@student.Surname</td>
+                            <td>@student.Age</td>
+                            <td>@student.Semester</td>
+                            <td>@string.Join(", ", student.Classes)</td>
+                            <td>
+                                <button @onclick="() => JsonDataStudents(student.Id)" class="btn btn-primary">Get</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div style="flex: 1;">
+        @if (teachers == null)
+        {
+            <p><em>Cos....</em></p>
+        }
+        else
+        {
+
+            <table class="table table-bordered">
+                <thead class="alert-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Age</th>
+                        <th>Subject</th>
+                        <th>Get Json</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var teacher in teachers)
+                    {
+                        <tr>
+                            <td>@teacher.Name</td>
+                            <td>@teacher.Surname</td>
+                            <td>@teacher.Age</td>
+                            <td>@teacher.Subject</td>
+                            <td>
+                                <button @onclick="() => JsonDataTeachers(teacher.Id)" class="btn btn-primary">Get</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<textarea rows="10" cols="40" readonly>@JsonData</textarea>
+
+
+
+
+
+<form @onsubmit="CreateEmployee">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" @bind="Name">
+    </div>
+    <div class="form-group">
+        <label for="surname">Surname:</label>
+        <input type="text" class="form-control" id="surname" @bind="Surname">
+    </div>
+    <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" class="form-control" id="age" @bind="Age">
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" class="form-control" id="email" @bind="Email">
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<button @onclick="ShowAllEmployees" class="btn btn-secondary">Show All Employees</button>
+
+@if (employees != null && employees.Count > 0)
+{
+    <h4>All Employees:</h4>
+    <ul>
+        @foreach (var employee in employees)
+        {
+            <li>@employee.Id @employee.Name @employee.Surname (Age: @employee.Age, Email: @employee.Email)</li>
+        }
+    </ul>
+}
+
+@code {
+    private int Id=0;
+    private string? Name;
+    private string? Surname;
+    private int Age;
+    private string? Email;
+    private List<Employee>? employees;
+    DataGenerator generator = new();
+    Student[]? students;
+    Teacher[]? teachers;
+    private string? JsonData;
+
+    private void CreateEmployee()
+    {
+        Console.WriteLine(Id);
+        Employee employee = new Employee(Id,Name,Surname,Age,Email);
+
+        Console.WriteLine(Id);
+        dbContext.Employees.Add(employee);
+        Console.WriteLine(Dumper.Dump(employee));
+        dbContext.SaveChanges();
+
+    }
+    private void ShowAllEmployees()
+    {
+        employees = dbContext.Employees.ToList();
+
+    }
+
+    private void JsonDataStudents(int targetId)
+    {
+        var person = students.First(student => student.Id == targetId);
+        JsonData = JsonHandler.ClassToJson<Student>(person);
+    }
+
+    private void JsonDataTeachers(int targetId)
+    {
+        var person = teachers.First(teacher => teacher.Id == targetId);
+        JsonData =  JsonHandler.ClassToJson<Teacher>(person);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (students == null)
+        {
+            students = await generator.AssignStudentsRoles(2);
+
+        }
+        if (teachers == null)
+        {
+            teachers = await generator.AssignTeachersRoles(2);
+
+        }
+
+    }
+
+
+
+}
