@@ -1,0 +1,66 @@
+﻿@page "/items"
+@using DataHandler
+@using DataHandler.Models
+@inject IDataAccess _data
+@inject IConfiguration _config;
+
+
+<h3>DatabaseFetch</h3>
+
+<button class="btn btn-primary" @onclick="InsertData">Click me</button>
+
+
+
+@if (items == null)
+{
+	<p><em>Loading...</em></p>
+
+}
+else
+{
+	@foreach(var i in items)
+	{
+		<p>
+			@i.Id
+			@i.Name
+		</p>
+	}
+}
+
+@code {
+	List<ItemDB>? items;
+	string? connectionString;
+	private async Task InsertData()
+	{
+
+		string sql = "INSERT INTO itemdb (Id, Name) VALUES (@Ip ,@Name);";
+		Console.WriteLine(_config.GetConnectionString("default"));
+		await _data.SaveData(sql, new { Ip=269 , Name = "Tomek" }, _config.GetConnectionString("default"));
+
+
+	}
+
+	private async Task ReadData()
+	{
+		string sql = "select * from itemdb";
+		items = await _data.LoadData<ItemDB, dynamic>(sql, new { }, _config.GetConnectionString("default"));
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		connectionString = _config.GetConnectionString("default");
+
+		
+
+		if (items == null)
+		{
+			Console.WriteLine("BAM");
+			await ReadData();
+		}
+
+	}
+
+
+
+
+}

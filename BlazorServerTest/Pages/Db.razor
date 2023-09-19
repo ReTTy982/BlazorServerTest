@@ -1,9 +1,12 @@
 ﻿@page "/db"
 @using Models;
+@using DataHandler
 @inject Controller.PersonController personController;
+@inject IConfiguration _config;
+@inject IDataAccess _data
 
 
-<form @onsubmit="personController.CreatePerson">
+<form @onsubmit="() => personController.CreatePersonAsync(_data,connectionString)">
     <h3>Create Person</h3>
     <div style="width: 25%;">
     <div class="form-group">
@@ -170,13 +173,15 @@
 
 @code {
     //private PersonController personController = new();
-
+    string? connectionString;
 
 
 
     protected override async Task OnInitializedAsync()
     {
-        await personController.Init();
+        connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
+
+        await personController.Init(_data,connectionString);
     }
 
 
