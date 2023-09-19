@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using DataHandler;
+using Controller;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddDbContext<DatabaseContext>(options =>
-	options.UseInMemoryDatabase("InMemoryDatabase"));
+builder.Services.AddSingleton<PersonController>();
+
 
 var app = builder.Build();
 

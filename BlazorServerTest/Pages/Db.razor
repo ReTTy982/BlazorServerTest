@@ -1,8 +1,6 @@
 ﻿@page "/db"
 @using Models;
-@using DataHandler;
-@using Controller;
-@inject DatabaseContext dbContext
+@inject Controller.PersonController personController;
 
 
 <form @onsubmit="personController.CreatePerson">
@@ -171,7 +169,7 @@
 
 
 @code {
-    private PersonController personController = new();
+    //private PersonController personController = new();
 
 
 
