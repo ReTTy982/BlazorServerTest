@@ -1,6 +1,8 @@
 ﻿using DataHandler;
+using DataHandler.Models;
 using Models;
-using System.Reflection.Emit;
+using System.Configuration.Internal;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Controller;
 
@@ -32,7 +34,7 @@ public class PersonController
     public Subjects SelectedSubject {  get; set; }
 
 
-    public async Task Init()
+    public async Task Init(IDataAccess _data, string? connectionString)
     {
         if (students == null)
         {
@@ -42,8 +44,9 @@ public class PersonController
         }
         if (teachers == null)
         {
-            var array = await _generator.AssignTeachersRoles(2);
-            teachers = array.ToList();
+            //var array = await _generator.AssignTeachersRoles(2);
+            //teachers = array.ToList();
+            await ReadTeacherAsync(_data,connectionString );
 
         }
 
@@ -62,23 +65,44 @@ public class PersonController
         JsonData = JsonHandler.ClassToJson<Teacher>(person);
     }
 
-    public void CreatePerson()
+    public async Task CreatePersonAsync(IDataAccess _data, string? connectionString )
     {
+        string sql;
         if (SelectedRole == "Student")
         {
             string[] array = ClassesList.ConvertAll(subject => subject.ToString()).ToArray();
             Student student = new(_generator.idRange, Name, Surname, Age, Semester, array);
             students.Add(student);
             _generator.idRange++;
-        }
+		}
         else if (SelectedRole == "Teacher")
         {
             string subject = SelectedSubject.ToString();
             Teacher teacher = new(_generator.idRange, Name, Surname, Age, subject);
-            teachers.Add(teacher);
+            
             _generator.idRange++;
-        }
 
+            try
+            {
+                sql = "insert into teacher (Name, Surname, Age, Subject) VALUES (@Name, @Surname, @Age, @Subject)";
+                await _data.SaveData(sql, teacher, connectionString);
+                await ReadTeacherAsync(_data, connectionString);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+		}
+
+    }
+
+    public async Task ReadTeacherAsync(IDataAccess _data, string? connectionString)
+    {
+        string sql = "select * from teacher";
+        teachers = await _data.LoadData<Teacher, dynamic>(sql, new { }, connectionString);
     }
 
     public void AddSelectedClass()
@@ -93,5 +117,7 @@ public class PersonController
     {
         ClassesList.Remove(subject);
     }
+
+
 
 }
