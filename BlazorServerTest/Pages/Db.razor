@@ -45,7 +45,7 @@
                         <option value="@subject">@subject.ToString()</option>
                     }
                 </select>
-                <button @onclick="personController.AddSelectedClass" class="btn btn-primary">Add</button>
+                <button type="button" @onclick="personController.AddSelectedClass" class="btn btn-primary">Add</button>
             </div>
 
             <div>
@@ -55,7 +55,7 @@
                     {
                         <li>
                             @subject.ToString()
-                            <button @onclick="() => personController.RemoveSelectedClass(subject)" class="btn btn-danger">Remove</button>
+                            <button type ="button" @onclick="() => personController.RemoveSelectedClass(subject)" class="btn btn-danger">Remove</button>
                         </li>
                     }
                 </ul>
