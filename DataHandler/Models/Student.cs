@@ -20,8 +20,23 @@ public class Student : Person
 		this.Classes = classes;
 
 	}
+	// Constructor for database read
+    public Student(int id, string name, string surname, int age, int semester, string classes) : base(name, surname, age)
+    {
+        this.Id = id;
+        this.Semester = semester;
+        this.Classes = classes.Split(",");
 
-	public void TakeClasses(Subjects[] classes)
+    }
+	// Constructor for database write
+    public Student(string name, string surname, int age, int semester, string[] classes) : base(name, surname, age)
+    {
+        this.Semester = semester;
+        this.Classes = classes;
+
+    }
+
+    public void TakeClasses(Subjects[] classes)
 	{
 		string[] stringClasses = new string[classes.Length];
 		for (int i = 0; i < classes.Length; i++)
