@@ -169,18 +169,19 @@
 </div>
 
 <textarea rows="10" cols="40" readonly>@personController.JsonData</textarea>
+<h3>@connectionString</h3>
 
 
 @code {
-    //private PersonController personController = new();
     string? connectionString;
 
 
 
     protected override async Task OnInitializedAsync()
     {
-        // connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
-        connectionString = _config.GetConnectionString("default");
+        connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
+
+        //connectionString = _config.GetConnectionString("default");
 
         await personController.Init(_data,connectionString);
     }
