@@ -33,23 +33,23 @@ public class PersonController
 
     public async Task Init(IDataAccess _data, string? connectionString)
     {
-        //if (students == null)
-        //{
+        if (students == null)
+        {
 
-        //    await ReadStudentAsync(_data, connectionString);
+            await ReadStudentAsync(_data, connectionString);
 
-        //    if (!students.Any())
-        //    {
-        //        SelectedRole = "Student";
-        //        var array = await _generator.AssignStudentsRoles(5);
-        //        foreach(Student student in array)
-        //        {
-        //           await GenerateStudentAsync(_data, connectionString, student);
-        //        }
-        //        await ReadStudentAsync(_data, connectionString);
-        //    }
+            if (!students.Any())
+            {
+                SelectedRole = "Student";
+                var array = await _generator.AssignStudentsRoles(5);
+                foreach (Student student in array)
+                {
+                    await GenerateStudentAsync(_data, connectionString, student);
+                }
+                await ReadStudentAsync(_data, connectionString);
+            }
 
-        //}
+        }
         if (teachers==null)
         {
 
