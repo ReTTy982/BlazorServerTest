@@ -1,8 +1,5 @@
 ﻿using DataHandler;
-using DataHandler.Models;
 using Models;
-using System.Configuration.Internal;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Controller;
 
@@ -36,25 +33,23 @@ public class PersonController
 
     public async Task Init(IDataAccess _data, string? connectionString)
     {
-        if (students == null)
-        {
-            //var array = await _generator.AssignStudentsRoles(2);
-            //students = array.ToList();
+        //if (students == null)
+        //{
 
-            await ReadStudentAsync(_data, connectionString);
+        //    await ReadStudentAsync(_data, connectionString);
 
-            if (!students.Any())
-            {
-                SelectedRole = "Student";
-                var array = await _generator.AssignStudentsRoles(5);
-                foreach(Student student in array)
-                {
-                   await GenerateStudentAsync(_data, connectionString, student);
-                }
-                await ReadStudentAsync(_data, connectionString);
-            }
+        //    if (!students.Any())
+        //    {
+        //        SelectedRole = "Student";
+        //        var array = await _generator.AssignStudentsRoles(5);
+        //        foreach(Student student in array)
+        //        {
+        //           await GenerateStudentAsync(_data, connectionString, student);
+        //        }
+        //        await ReadStudentAsync(_data, connectionString);
+        //    }
 
-        }
+        //}
         if (teachers==null)
         {
 
@@ -146,8 +141,6 @@ public class PersonController
             string subject = SelectedSubject.ToString();
             Teacher teacher = new(_generator.idRange, Name, Surname, Age, subject);
             
-            _generator.idRange++;
-
             try
             {
                 sql = "insert into teacher (Name, Surname, Age, Subject) VALUES (@Name, @Surname, @Age, @Subject)";

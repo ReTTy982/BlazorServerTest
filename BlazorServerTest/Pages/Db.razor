@@ -179,9 +179,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
+        //connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
 
-        //connectionString = _config.GetConnectionString("default");
+        connectionString = _config.GetConnectionString("azure");
 
         await personController.Init(_data,connectionString);
     }
