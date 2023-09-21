@@ -19,7 +19,7 @@ public class PersonController
 
     public string? JsonData { get; set; }
     public string? SelectedRole
-    { 
+    {
         get { return _selectedRole; }
         set { _selectedRole = value; }
     }
@@ -28,7 +28,7 @@ public class PersonController
     public Subjects SelectedClass { get; set; }
     public List<Subjects> ClassesList { get; set; } = new List<Subjects>();
 
-    public Subjects SelectedSubject {  get; set; }
+    public Subjects SelectedSubject { get; set; }
 
 
     public async Task Init(IDataAccess _data, string? connectionString)
@@ -50,7 +50,7 @@ public class PersonController
             }
 
         }
-        if (teachers==null)
+        if (teachers == null)
         {
 
             await ReadTeacherAsync(_data, connectionString);
@@ -84,7 +84,7 @@ public class PersonController
         JsonData = JsonHandler.ClassToJson<Teacher>(person);
     }
 
-    private async Task GenerateStudentAsync(IDataAccess _data, string? connectionString,Student student)
+    private async Task GenerateStudentAsync(IDataAccess _data, string? connectionString, Student student)
     {
         string sql = "insert into student (Name, Surname, Age, Semester, Classes) VALUES (@Name, @Surname, @Age, @Semester,@Classes)";
         await _data.SaveData(sql,
@@ -140,7 +140,7 @@ public class PersonController
         {
             string subject = SelectedSubject.ToString();
             Teacher teacher = new(_generator.idRange, Name, Surname, Age, subject);
-            
+
             try
             {
                 sql = "insert into teacher (Name, Surname, Age, Subject) VALUES (@Name, @Surname, @Age, @Subject)";
@@ -154,7 +154,7 @@ public class PersonController
             }
 
 
-		}
+        }
 
     }
 

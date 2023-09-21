@@ -13,9 +13,9 @@ public class DataAccess : IDataAccess
         {
             connection.Open();
             var rows = await connection.QueryAsync<T>(sql, parameters);
-			connection.Close();
+            connection.Close();
 
-			return rows.ToList();
+            return rows.ToList();
         }
 
 
@@ -23,15 +23,15 @@ public class DataAccess : IDataAccess
 
     public async Task<int> SaveData<T>(string sql, T parameters, string connectionString)
     {
-		using (IDbConnection connection = new MySqlConnection(connectionString))
-		{
-			connection.Open();
+        using (IDbConnection connection = new MySqlConnection(connectionString))
+        {
+            connection.Open();
 
-			var x = await connection.ExecuteAsync(sql, parameters);
+            var x = await connection.ExecuteAsync(sql, parameters);
             connection.Close();
-			return x;
-            
-         
+            return x;
+
+
         }
 
     }

@@ -1,7 +1,4 @@
 using BlazorServerTest.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.EntityFrameworkCore;
 using DataHandler;
 using Controller;
 
@@ -13,7 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<PersonController>();
-builder.Services.AddSingleton<IDataAccess , DataAccess>();
+builder.Services.AddSingleton<IDataAccess, DataAccess>();
 
 
 var app = builder.Build();

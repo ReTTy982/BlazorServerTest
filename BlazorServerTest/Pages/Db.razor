@@ -7,184 +7,183 @@
 
 
 <form @onsubmit="() => personController.CreatePersonAsync(_data,connectionString)">
-    <h3>Create Person</h3>
-    <div style="width: 25%;">
-    <div class="form-group">
-        <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" @bind="personController.Name">
-    </div>
-    <div class="form-group">
-        <label for="surname">Surname:</label>
-        <input type="text" class="form-control" id="surname" @bind="personController.Surname">
-    </div>
-    <div class="form-group">
-        <label for="age">Age:</label>
-        <input type="number" class="form-control" id="age" @bind="personController.Age">
-    </div>
-    <div class="form-group">
-        <label for="role">Role:</label>
-        <select class="form-control" id="role" @bind="personController.SelectedRole">
-            <option value="Teacher">Teacher</option>
-            <option value="Student">Student</option>
-        </select>
-    </div>
-    @if (personController.SelectedRole == "Student")
-    {
-            <div class="form-group">
-                <label for="semester">Semester:</label>
-                <select class="form-control" id="semester" @bind="personController.Semester">
-                    @for (int i = 1; i <= 7; i++)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
-            </div>
+	<h3>Create Person</h3>
+	<div style="width: 25%;">
+		<div class="form-group">
+			<label for="name">Name:</label>
+			<input type="text" class="form-control" id="name" @bind="personController.Name">
+		</div>
+		<div class="form-group">
+			<label for="surname">Surname:</label>
+			<input type="text" class="form-control" id="surname" @bind="personController.Surname">
+		</div>
+		<div class="form-group">
+			<label for="age">Age:</label>
+			<input type="number" class="form-control" id="age" @bind="personController.Age">
+		</div>
+		<div class="form-group">
+			<label for="role">Role:</label>
+			<select class="form-control" id="role" @bind="personController.SelectedRole">
+				<option value="Teacher">Teacher</option>
+				<option value="Student">Student</option>
+			</select>
+		</div>
+		@if (personController.SelectedRole == "Student")
+		{
+			<div class="form-group">
+				<label for="semester">Semester:</label>
+				<select class="form-control" id="semester" @bind="personController.Semester">
+					@for (int i = 1; i <= 7; i++)
+					{
+						<option value="@i">@i</option>
+					}
+				</select>
+			</div>
 
-            <div class="form-group">
-                <label for="classes">Classes:</label>
-                <select class="form-control" id="classes" @bind="personController.SelectedClass">
-                    @foreach (Subjects subject in Enum.GetValues(typeof(Subjects)))
-                    {
-                        <option value="@subject">@subject.ToString()</option>
-                    }
-                </select>
-                <button type="button" @onclick="personController.AddSelectedClass" class="btn btn-primary">Add</button>
-            </div>
+			<div class="form-group">
+				<label for="classes">Classes:</label>
+				<select class="form-control" id="classes" @bind="personController.SelectedClass">
+					@foreach (Subjects subject in Enum.GetValues(typeof(Subjects)))
+					{
+						<option value="@subject">@subject.ToString()</option>
+					}
+				</select>
+				<button type="button" @onclick="personController.AddSelectedClass" class="btn btn-primary">Add</button>
+			</div>
 
-            <div>
-                <h4>Selected Classes:</h4>
-                <ul>
-                    @foreach (Subjects subject in personController.ClassesList)
-                    {
-                        <li>
-                            @subject.ToString()
-                            <button type ="button" @onclick="() => personController.RemoveSelectedClass(subject)" class="btn btn-danger">Remove</button>
-                        </li>
-                    }
-                </ul>
-            </div>
-
-
-    }
-    else if (personController.SelectedRole == "Teacher")
-    {
-        <div class="form-group">
-            <label for="subject">Subject:</label>
-            <select class="form-control" id="subject" @bind="personController.SelectedSubject">
-                @foreach (Subjects subject in Enum.GetValues(typeof(Subjects)))
-                {
-                    <option value="@subject">@subject.ToString()</option>
-                }
-            </select>
-        </div>
-    }
+			<div>
+				<h4>Selected Classes:</h4>
+				<ul>
+					@foreach (Subjects subject in personController.ClassesList)
+					{
+						<li>
+							@subject.ToString()
+							<button type="button" @onclick="() => personController.RemoveSelectedClass(subject)" class="btn btn-danger">Remove</button>
+						</li>
+					}
+				</ul>
+			</div>
 
 
+		}
+		else if (personController.SelectedRole == "Teacher")
+		{
+			<div class="form-group">
+				<label for="subject">Subject:</label>
+				<select class="form-control" id="subject" @bind="personController.SelectedSubject">
+					@foreach (Subjects subject in Enum.GetValues(typeof(Subjects)))
+					{
+						<option value="@subject">@subject.ToString()</option>
+					}
+				</select>
+			</div>
+		}
 
-    <button type="submit" class="btn btn-primary">Create</button>
-    </div>
+
+
+		<button type="submit" class="btn btn-primary">Create</button>
+	</div>
 </form>
 
 <div style="display: flex; justify-content: space-between;">
-    <h3>Students</h3>
-    <h3>Teachers</h3>
+	<h3>Students</h3>
+	<h3>Teachers</h3>
 </div>
 
 
 
-<div style ="display: flex;">
-    <div style="flex: 1; margin-right: 20px;">
-        @if (personController.students == null)
-        {
-            <p><em>Cos....</em></p>
-        }
-        else
-        {
+<div style="display: flex;">
+	<div style="flex: 1; margin-right: 20px;">
+		@if (personController.students == null)
+		{
+			<p><em>Cos....</em></p>
+		}
+		else
+		{
 
-            <table class="table table-bordered">
-                <thead class="alert-dark">
-                    <tr>
-                        <th>Name</th>
-                        <th>Surname</th>
-                        <th>Age</th>
-                        <th>Semester</th>
-                        <th>Classes</th>
-                        <th>Get Json</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var student in personController.students)
-                    {
-                        <tr>
-                            <td>@student.Name</td>
-                            <td>@student.Surname</td>
-                            <td>@student.Age</td>
-                            <td>@student.Semester</td>
-                            <td>@string.Join(", ", student.Classes)</td>
-                            <td>
-                                <button @onclick="() => personController.JsonDataStudents(student.Id)" class="btn btn-primary">Get</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-    <div style="flex: 1;">
-        @if (personController.teachers == null)
-        {
-            <p><em>Cos....</em></p>
-        }
-        else
-        {
+			<table class="table table-bordered">
+				<thead class="alert-dark">
+					<tr>
+						<th>Name</th>
+						<th>Surname</th>
+						<th>Age</th>
+						<th>Semester</th>
+						<th>Classes</th>
+						<th>Get Json</th>
 
-            <table class="table table-bordered">
-                <thead class="alert-dark">
-                    <tr>
-                        <th>personControllerName</th>
-                        <th>Surname</th>
-                        <th>Age</th>
-                        <th>Subject</th>
-                        <th>Get Json</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var teacher in personController.teachers)
-                    {
-                        <tr>
-                            <td>@teacher.Name</td>
-                            <td>@teacher.Surname</td>
-                            <td>@teacher.Age</td>
-                            <td>@teacher.Subject</td>
-                            <td>
-                                <button @onclick="() => personController.JsonDataTeachers(teacher.Id)" class="btn btn-primary">Get</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var student in personController.students)
+					{
+						<tr>
+							<td>@student.Name</td>
+							<td>@student.Surname</td>
+							<td>@student.Age</td>
+							<td>@student.Semester</td>
+							<td>@string.Join(", ", student.Classes)</td>
+							<td>
+								<button @onclick="() => personController.JsonDataStudents(student.Id)" class="btn btn-primary">Get</button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+	</div>
+	<div style="flex: 1;">
+		@if (personController.teachers == null)
+		{
+			<p><em>Cos....</em></p>
+		}
+		else
+		{
+
+			<table class="table table-bordered">
+				<thead class="alert-dark">
+					<tr>
+						<th>personControllerName</th>
+						<th>Surname</th>
+						<th>Age</th>
+						<th>Subject</th>
+						<th>Get Json</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var teacher in personController.teachers)
+					{
+						<tr>
+							<td>@teacher.Name</td>
+							<td>@teacher.Surname</td>
+							<td>@teacher.Age</td>
+							<td>@teacher.Subject</td>
+							<td>
+								<button @onclick="() => personController.JsonDataTeachers(teacher.Id)" class="btn btn-primary">Get</button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+	</div>
 </div>
 
 <textarea rows="10" cols="40" readonly>@personController.JsonData</textarea>
-<h3>@connectionString</h3>
 
 
 @code {
-    string? connectionString;
+	string? connectionString;
 
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        //connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
+	protected override async Task OnInitializedAsync()
+	{
+		//connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb");
 
-        connectionString = _config.GetConnectionString("azure");
+		connectionString = _config.GetConnectionString("azure");
 
-        await personController.Init(_data,connectionString);
-    }
+		await personController.Init(_data, connectionString);
+	}
 
 
 }
